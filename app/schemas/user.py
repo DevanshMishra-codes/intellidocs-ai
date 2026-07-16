@@ -19,11 +19,6 @@ class UserCreate(BaseModel):
     )
 
 
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-
 class UserResponse(BaseModel):
     id: UUID
     username: str
