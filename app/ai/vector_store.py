@@ -48,19 +48,28 @@ class VectorStore:
         k=5,
     ):
 
+        if self.index.ntotal == 0:
+            return []
+
+        k = min(k, self.index.ntotal)
+
         distances, indices = self.index.search(
-            np.array(
-                [embedding],
-                dtype="float32",
-            ),
+            np.array([embedding], dtype="float32"),
             k,
         )
 
-        return [
-            self.chunks[i]
-            for i in indices[0]
-            if i < len(self.chunks)
-        ]
+        seen = set()
+        results = []
+
+        for idx in indices[0]:
+            if idx < len(self.chunks):
+                chunk = self.chunks[idx]
+
+                if chunk not in seen:
+                    seen.add(chunk)
+                    results.append(chunk)
+
+        return results
 
     def save(self):
 
