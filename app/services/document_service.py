@@ -9,8 +9,16 @@ from app.models.document import Document
 from app.models.user import User
 from app.repositories.document_repository import document_repository
 
-UPLOAD_DIR = Path("uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
+from app.ai.parser import pdf_parser
+from app.ai.chunking import text_chunker
+from app.ai.embeddings import embedding_generator
+from app.ai.vector_store import vector_store
+
+DOCUMENT_UPLOAD_DIR = Path("uploads/documents")
+DOCUMENT_UPLOAD_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
 
 
 class DocumentService:
@@ -30,14 +38,38 @@ class DocumentService:
 
         unique_filename = f"{uuid.uuid4()}.pdf"
 
-        file_path = UPLOAD_DIR / unique_filename
+        file_path = DOCUMENT_UPLOAD_DIR / unique_filename
 
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
+        # -----------------------------
+        # AI Processing Pipeline
+        # -----------------------------
+
+        text = pdf_parser.extract_text(str(file_path))
+
+        chunks = text_chunker.chunk_text(text)
+
+        embeddings = embedding_generator.embed(chunks)
+
+        vector_store.load()
+
+        vector_store.add(
+            embeddings,
+            chunks,
+        )
+
+        vector_store.save()
+
+        # -----------------------------
+        # Save metadata
+        # -----------------------------
+
         document = Document(
             filename=file.filename,
             file_path=str(file_path),
+            extracted_text=text,
             owner_id=current_user.id,
         )
 
