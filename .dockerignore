@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Uploads
+uploads/documents/*
+uploads/vectors/*
+
+# Keep folders
+!uploads/documents/.gitkeep
+!uploads/vectors/.gitkeep
+
+# Database
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile.old

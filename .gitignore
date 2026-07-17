@@ -1,27 +1,55 @@
+# Byte-compiled / cache
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
 .venv/
 venv/
 env/
 
-.vscode/
-
+# Environment files
 .env
+.env.docker
 
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test & coverage
 .pytest_cache/
 .coverage
 htmlcov/
 
-dist/
+# Build artifacts
 build/
+dist/
 *.egg-info/
 
-.idea/
+# Type checker / linter caches
+.mypy_cache/
+.ruff_cache/
+.pyright/
 
-.DS_Store
+# Logs
+*.log
 
+# Database files
+*.db
+*.sqlite3
 
+# Uploaded files
 uploads/documents/*
 uploads/vectors/*
+
+# Keep directory structure
 !uploads/documents/.gitkeep
 !uploads/vectors/.gitkeep
+
+# Docker override (local only)
+docker-compose.override.yml

@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17
+    container_name: intellidocs-db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Devansh2021679
+      POSTGRES_DB: intellidocs-ai
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+
+    container_name: intellidocs-api
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    env_file:
+      - .env.docker
+
+    ports:
+      - "8000:8000"
+
+    restart: unless-stopped
+
+    volumes:
+      - ./uploads:/app/uploads
+
+volumes:
+  postgres_data:
